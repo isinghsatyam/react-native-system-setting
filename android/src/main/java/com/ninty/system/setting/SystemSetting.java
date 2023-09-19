@@ -65,17 +65,25 @@ public class SystemSetting extends ReactContextBaseJavaModule implements Activit
     }
 
     private void registerVolumeReceiver() {
-        if (!volumeBR.isRegistered()) {
-            IntentFilter filter = new IntentFilter("android.media.VOLUME_CHANGED_ACTION");
-            mContext.registerReceiver(volumeBR, filter);
-            volumeBR.setRegistered(true);
+        try {
+            if (!volumeBR.isRegistered()) {
+                IntentFilter filter = new IntentFilter("android.media.VOLUME_CHANGED_ACTION");
+                mContext.registerReceiver(volumeBR, filter);
+                volumeBR.setRegistered(true);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Error registering VolumeBroadcastReceiver: " + e.getMessage());
         }
     }
 
     private void unregisterVolumeReceiver() {
-        if (volumeBR.isRegistered()) {
-            mContext.unregisterReceiver(volumeBR);
-            volumeBR.setRegistered(false);
+        try {
+            if (volumeBR.isRegistered()) {
+                mContext.unregisterReceiver(volumeBR);
+                volumeBR.setRegistered(false);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Error unregistering VolumeBroadcastReceiver: " + e.getMessage());
         }
     }
 
